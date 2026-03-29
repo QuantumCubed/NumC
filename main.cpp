@@ -35,6 +35,10 @@ int main(void) {
 
 	std::cout << matrixA << "\n";
 	std::cout << matrixB << "\n";
+	
+	numc::Matrix<int> matrixC = numc::matMult(matrixA, matrixB);
+
+	std::cout << matrixC << "\n";
 
 	return 0;
 }

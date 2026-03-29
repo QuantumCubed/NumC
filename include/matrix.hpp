@@ -24,6 +24,15 @@ namespace numc {
 			capacity(rows * cols),
 			elements(std::make_unique<T[]>(rows * cols)) {}
 		
+		Matrix(Matrix&& other) noexcept
+			: size(other.size),
+			  capacity(other.capacity),
+			  shape(other.shape),
+			  elements(std::move(other.elements)) {
+			other.size = 0;
+			other.capacity = 0;
+		}
+
 		~Matrix() = default;
 
 		T get(std::uint32_t row_index, std::uint32_t col_index) const {	
@@ -62,4 +71,63 @@ namespace numc {
 			return os;
 		}
 	};
+
+	template <typename T>
+	void scalarX(Matrix<T>& mat, int x) {
+		for (size_t i = 0; i < mat.size; ++i) {
+			mat.elements[i] *= x;
+		}
+	}
+
+	template <typename T>
+	Matrix<T> matAdd(const Matrix<T>& matA, const Matrix<T>& matB) {
+		// add length & shape check later
+		Matrix<T> matC(matA.size);
+
+		for (size_t i = 0; i < matA.size; ++i) {
+			matC.elements[i] = matA.elements[i] + matB.elements[i];
+		}
+
+		matC.size = matA.size;
+		matC.shape = matA.shape;
+
+		return matC;
+	}
+	
+	template <typename T>
+	Matrix<T> matSub(const Matrix<T>& matA, const Matrix<T>& matB) {
+		// add length & shape check later
+		Matrix<T> matC(matA.size);
+
+		for (size_t i = 0; i < matA.size; ++i) {
+			matC.elements[i] = matA.elements[i] - matB.elements[i];
+		}
+
+		matC.size = matA.size;
+		matC.shape = matA.shape;
+
+		return matC;
+	}
+
+	template <typename T>
+	Matrix<T> matMult(const Matrix<T>& matA, const Matrix<T>& matB) {
+		// add shape validity check: (m x n) * (n x p)
+
+		if (matA.shape.cols != matB.shape.rows)
+			throw std::invalid_argument("Incompatible Matrix Dimensions");
+		
+		Matrix<T> matC(matA.shape.rows, matB.shape.cols);
+		matC.size = matC.shape.rows * matC.shape.cols;
+
+		for (size_t k = 0; k < matA.shape.cols; ++k) {
+			for (size_t i = 0; i < matA.shape.rows; ++i) {
+				auto matA_ik = matA.elements[i * matA.shape.cols + k];
+				for (size_t j = 0; j < matB.shape.cols; ++j) {
+					matC.elements[i * matC.shape.cols + j] +=
+						matA_ik * matB.elements[k * matB.shape.cols + j];
+				}
+			}
+		}
+		return matC;
+	}
 }
