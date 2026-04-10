@@ -55,7 +55,7 @@ namespace numc {
 				os << vec.elements[i] << ", ";
 			}
 
-			os << vec.elements[vec.size - 1] << " ]\n";
+			os << vec.elements[vec.size - 1] << " ]";
 
 			return os;
 		}
@@ -139,4 +139,46 @@ namespace numc {
 	// Vector<T> cross(const Vector<T>& vecA, const Vector<T>& vecB) {
 	//
 	// }
+	
+	template <typename T>
+	Vector<T> hadamard(const Vector<T>& a, const Vector<T>& b) {
+		if (a.shape != b.shape) { throw std::out_of_range("index of of range!"); } 
+		
+		Vector<T> c(a.capacity);
+
+		for (size_t i = 0; i < a.capacity; ++i) {
+			c.elements[i] = a.elements[i] * b.elements[i];
+			++c.size;
+		}
+		c.shape.cols = c.size;
+
+		return c;
+	}
+	
+	template<typename T>
+	Vector<double> normalize(const Vector<T>& a) {
+		double magnitude = numc::magnitude(a);
+
+		Vector<double> c(a.capacity);
+
+		for (size_t i = 0; i < a.size; ++i) {
+			c.elements[i] = (double) a.elements[i] / magnitude;
+			++c.size;
+		}
+		c.shape.cols = c.size;
+
+		return c;
+	}
+
+	template <typename T>
+	T argmax(const Vector<T>& vec) {
+		T max = vec.elements[0];
+
+		for (size_t i = 1; i < vec.size; ++i) {
+			if (vec.elements[i] > max)
+				max = vec.elements[i];
+		}
+
+		return max;
+	}
 }
