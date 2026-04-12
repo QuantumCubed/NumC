@@ -145,8 +145,7 @@ namespace numc {
 
 		return C;
 	}
-
-
+  
 	// ADD TILING FOR BIGGER MATRICIES e.g. 8x8
 	template <typename T>
 	Matrix<T> transpose(const Matrix<T>& mat) {
