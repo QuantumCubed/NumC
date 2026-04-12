@@ -131,5 +131,33 @@ namespace numc {
 		return matC;
 	}
 
+	template <typename T>
+	Matrix<T> hadamard(const Matrix<T>& A, const Matrix<T>& B) {
+		if (A.shape != B.shape) 
+			throw std::invalid_argument("Incompatible Matrix Dimensions");
+		
+		Matrix<T> C(A.shape.rows, B.shape.cols);
+
+		for (size_t i = 0; i < A.size; ++i) {
+			C.elements[i] = A.elements[i] * B.elements[i];
+			++C.size;
+		}
+
+		return C;
+	}
+  
+	// ADD TILING FOR BIGGER MATRICIES e.g. 8x8
+	template <typename T>
+	Matrix<T> transpose(const Matrix<T>& mat) {
+		Matrix<T> t(mat.shape.cols, mat.shape.rows);
+
+		for (size_t i = 0; i < mat.shape.rows; ++i) {
+			for (size_t j = 0; j < mat.shape.cols; j++) {
+				t.elements[j * mat.shape.rows + i] = mat.elements[i * mat.shape.cols + j];
+				++t.size;
+			}
+		}
+		return t;
+	}
 
 }

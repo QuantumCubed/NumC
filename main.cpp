@@ -47,14 +47,20 @@ int main(void) {
 		matrixB.push(i);
 	}
 
-	std::cout << matrixA << "\n";
-	std::cout << matrixB << "\n";
+	// std::cout << matrixA << "\n";
+	// std::cout << matrixB << "\n";
+	//
+	// numc::Matrix<int> matrixC = numc::matMult(matrixA, matrixB);
+	//
+	// std::cout << matrixC << "\n";
+	//
+	// numc::Matrix<int> matrixD = numc::hadamard(matrixA, matrixB);
+	//
+	// std::cout << matrixD << "\n";
+	
+	auto matrixT = numc::transpose(matrixA);
 
-	numc::Matrix<int> matrixC = numc::matMult(matrixA, matrixB);
-
-	std::cout << matrixC << "\n";
-
-	something
+	std::cout << matrixT << "\n";
 
 	return 0;
 }
