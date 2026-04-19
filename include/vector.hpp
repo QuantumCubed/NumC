@@ -14,7 +14,7 @@ namespace numc {
 		std::unique_ptr<T[]> elements;
 		numc::Shape shape;
 
-		Vector(size_t cols) : shape({ .rows = 1, .cols = static_cast<uint32_t>(cols) }),
+		Vector(size_t cols) : shape(1, cols),
 			elements(std::make_unique<T[]>(cols)) {}
 		
 		Vector(Vector&& other) noexcept
@@ -31,11 +31,11 @@ namespace numc {
 
 			os << "[ ";
 
-			for (std::size_t i = 0; i < vec.shape.cols - 1; ++i) {
+			for (std::size_t i = 0; i < vec.shape.size - 1; ++i) {
 				os << vec.elements[i] << ", ";
 			}
 
-			os << vec.elements[vec.shape.cols - 1] << " ]";
+			os << vec.elements[vec.shape.size - 1] << " ]";
 
 			return os;
 		}
@@ -43,7 +43,7 @@ namespace numc {
 
 	template <typename T>
 	void scalarX(Vector<T>& vec, int x) {
-		for (size_t i = 0; i < vec.shape.cols; ++i) {
+		for (size_t i = 0; i < vec.shape.size; ++i) {
 			vec.elements[i] *= x;
 		}
 	}
@@ -51,9 +51,9 @@ namespace numc {
 	template <typename T>
 	Vector<T> vecAdd(const Vector<T>& vecA, const Vector<T>& vecB) {
 		// add length check later
-		Vector<T> vec3(vecA.shape.cols);
+		Vector<T> vec3(vecA.shape.size);
 
-		for (size_t i = 0; i < vecA.shape.cols; ++i) {
+		for (size_t i = 0; i < vecA.shape.size; ++i) {
 			vec3.elements[i] = vecA.elements[i] + vecB.elements[i];
 		}
 
@@ -62,9 +62,9 @@ namespace numc {
 	
 	template <typename T>
 	Vector<T> vecSub(const Vector<T>& vecA, const Vector<T>& vecB) {
-		Vector<T> c(vecA.shape.cols);
+		Vector<T> c(vecA.shape.size);
 
-		for (size_t i = 0; i < vecA.shape.cols; ++i) {
+		for (size_t i = 0; i < vecA.shape.size; ++i) {
 			c.elements[i] = vecA.elements[i] - vecB.elements[i];
 		}
 
@@ -73,11 +73,11 @@ namespace numc {
 
 	template <typename T>
 	T dot(const Vector<T>& vecA, const Vector<T>& vecB) {
-		if (vecA.shape.cols != vecB.shape.cols) return -1; // invalid
+		if (vecA.shape.size != vecB.shape.cols) return -1; // invalid
 		
 		int dot = 0;
 
-		for (size_t i = 0; i < vecA.shape.cols; ++i) {
+		for (size_t i = 0; i < vecA.shape.size; ++i) {
 			dot += vecA.elements[i] * vecB.elements[i];
 		}
 		return dot;
@@ -87,7 +87,7 @@ namespace numc {
 	double magnitude(const Vector<T>& vec) {
 		uint32_t sum = 0;
 
-		for (size_t i = 0; i < vec.shape.cols; ++i) {
+		for (size_t i = 0; i < vec.shape.size; ++i) {
 			sum += (vec.elements[i] * vec.elements[i]);
 		}
 
@@ -100,7 +100,7 @@ namespace numc {
 		double sumAA = 0;
 		double sumBB = 0;
 
-		for (size_t i = 0; i < vecA.shape.cols; ++i) {
+		for (size_t i = 0; i < vecA.shape.size; ++i) {
 			sumAB += vecA.elements[i] * vecB.elements[i];
 			sumAA += vecA.elements[i] * vecA.elements[i];
 			sumBB += vecB.elements[i] * vecB.elements[i];
@@ -118,9 +118,9 @@ namespace numc {
 	Vector<T> hadamard(const Vector<T>& vecA, const Vector<T>& vecB) {
 		if (vecA.shape != vecB.shape) { throw std::out_of_range("index of of range!"); } 
 		
-		Vector<T> c(vecA.shape.cols);
+		Vector<T> c(vecA.shape.size);
 
-		for (size_t i = 0; i < vecA.shape.cols; ++i) {
+		for (size_t i = 0; i < vecA.shape.size; ++i) {
 			c.elements[i] = vecA.elements[i] * vecB.elements[i];
 			++c.shape.cols;
 		}
@@ -132,9 +132,9 @@ namespace numc {
 	Vector<double> normalize(const Vector<T>& vecA) {
 		double magnitude = numc::magnitude(vecA);
 
-		Vector<double> c(vecA.shape.cols);
+		Vector<double> c(vecA.shape.size);
 
-		for (size_t i = 0; i < vecA.shape.cols; ++i) {
+		for (size_t i = 0; i < vecA.shape.size; ++i) {
 			c.elements[i] = (double) vecA.elements[i] / magnitude;
 			++c.shape.cols;
 		}
@@ -146,7 +146,7 @@ namespace numc {
 	T argmax(const Vector<T>& vec) {
 		T max = vec.elements[0];
 
-		for (size_t i = 1; i < vec.shape.cols; ++i) {
+		for (size_t i = 1; i < vec.shape.size; ++i) {
 			if (vec.elements[i] > max)
 				max = vec.elements[i];
 		}

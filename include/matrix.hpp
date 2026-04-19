@@ -14,10 +14,7 @@ namespace numc {
 		numc::Shape shape;
 
 		Matrix(std::size_t rows, std::size_t cols) :
-			shape({
-				static_cast<uint32_t>(rows), 
-				static_cast<uint32_t>(cols),
-			}),
+			shape(rows, cols),
 			elements(std::make_unique<T[]>(rows * cols)) {}
 	
 		Matrix(numc::Shape shape) : shape(shape),
@@ -65,7 +62,7 @@ namespace numc {
 		// add length & shape check later
 		Matrix<T> matC(matA.shape);
 
-		for (size_t i = 0; i < matA.shape.rows * matA.shape.cols; ++i) {
+		for (size_t i = 0; i < matA.shape.size; ++i) {
 			matC.elements[i] = matA.elements[i] + matB.elements[i];
 		}
 
@@ -79,7 +76,7 @@ namespace numc {
 		// add length & shape check later
 		Matrix<T> matC(matA.shape);
 
-		for (size_t i = 0; i < matA.shape.rows * matA.shape.cols; ++i) {
+		for (size_t i = 0; i < matA.shape.size; ++i) {
 			matC.elements[i] = matA.elements[i] - matB.elements[i];
 		}
 

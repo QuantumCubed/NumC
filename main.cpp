@@ -35,8 +35,7 @@ int main(void) {
 	
 	// MATRIX TEST STARTS HERE:
 	
-	numc::Shape square = (numc::Shape) { .rows = 3, .cols = 3 };
-
+	numc::Shape square = numc::Shape(3, 3); 
 	auto matrixA = numc::Matrix<int>(square);
 	auto matrixB = numc::Matrix<int>(square);
 
